@@ -11,12 +11,12 @@
     <ImageView
         android:id="@+id/image"
         android:scaleType="centerCrop"
-        android:layout_width="150dp"
+        android:layout_width="165dp"
         android:layout_height="100dp" />
 
     <TextView
         android:id="@+id/text"
-        android:layout_width="150dp"
+        android:layout_width="165dp"
         android:layout_height="wrap_content"
         android:background="#AA000000"
         android:gravity="center"

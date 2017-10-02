@@ -13,6 +13,9 @@ import android.widget.GridView;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity {
@@ -25,11 +28,12 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        ArrayList<ImageItem> imageItems = loadData();
+//        ArrayList<ImageItem> imageItems = loadData();
+        ArrayList<ImageProperties> imageProp = loadImageProperties();
 
 
         gridView = (GridView) findViewById(R.id.gridView);
-        gridAdapter = new CustomAdapter(this, R.layout.grid_item_layout, imageItems);
+        gridAdapter = new CustomAdapter(this, R.layout.grid_item_layout, imageProp);
         gridView.setAdapter(gridAdapter);
 
         setListener();
@@ -41,17 +45,34 @@ public class MainActivity extends AppCompatActivity {
 
             @Override
             public void onItemClick(AdapterView<?> parent, View v, int position, long id) {
-                ImageItem item = (ImageItem) parent.getItemAtPosition(position);
+                ImageProperties imageProp = (ImageProperties) parent.getItemAtPosition(position);
                 //Create intent
                 Intent intent = new Intent(MainActivity.this, DetailsActivity.class);
-                intent.putExtra("title", item.getTitle());
-                intent.putExtra("image", item.getImage());
-                intent.putExtra("length", item.getSize());
+                intent.putExtra("title", imageProp.getTitle());
+                intent.putExtra("image", imageProp.getPath());
+                intent.putExtra("length", imageProp.getSize());
 
                 //Start details activity
                 startActivity(intent);
             }
         });
+    }
+
+    private ArrayList<ImageProperties> loadImageProperties() {
+        final ArrayList<ImageProperties> imageProperties = new ArrayList<>();
+        File path = new File(Environment.getExternalStorageDirectory(), "ImageGallery");
+        if (path.exists()) {
+            String[] fileNames = path.list();
+            for (int i = 0; i < fileNames.length; i++) {
+                String fullPath = path.getPath() + "/" + fileNames[i];
+                String fileName = fileNames[i];
+                if (fileName.length() > 11)
+                    fileName = fileName.substring(0, 11);
+                long size = new File(fullPath).length();
+                imageProperties.add(new ImageProperties(fullPath, fileName, size));
+            }
+        }
+        return imageProperties;
     }
 
     private ArrayList<ImageItem> loadData() {

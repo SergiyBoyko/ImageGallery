@@ -9,6 +9,8 @@ import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
+
 import java.util.ArrayList;
 
 /**
@@ -17,11 +19,12 @@ import java.util.ArrayList;
 
 public class CustomAdapter extends BaseAdapter {
     private Context context; // MainActivity object (this)
-    private ArrayList<ImageItem> data = new ArrayList<ImageItem>(); // imageItems
+//    private ArrayList<ImageItem> data = new ArrayList<ImageItem>(); // imageItems
+    private ArrayList<ImageProperties> data = new ArrayList<ImageProperties>(); // imageItems
     private int layoutResourceId; // R.layout.grid_item_layout
 
     // new CustomAdapter(this, R.layout.grid_item_layout, imageItems);
-    public CustomAdapter(Context context, int layoutResourceId, ArrayList data) {
+    public CustomAdapter(Context context, int layoutResourceId, ArrayList<ImageProperties> data) {
         this.layoutResourceId = layoutResourceId;
         this.context = context;
         this.data = data;
@@ -58,9 +61,16 @@ public class CustomAdapter extends BaseAdapter {
             holder = (ViewHolder) row.getTag();
         }
 
-        ImageItem item = (ImageItem) data.get(i);
-        holder.imageTitle.setText(item.getTitle());
-        holder.image.setImageBitmap(item.getImage());
+        ImageProperties imageProperties = data.get(i);
+//        ImageItem item = (ImageItem) data.get(i);
+        holder.imageTitle.setText(imageProperties.getTitle());
+
+        Glide
+                .with(context)
+                .load(imageProperties.getPath())
+                .into(holder.image);
+//        holder.image.setImageBitmap(item.getImage());
+
         return row;
     }
 
