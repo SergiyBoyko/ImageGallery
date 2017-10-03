@@ -22,6 +22,13 @@ public class CustomAdapter extends BaseAdapter {
     private ArrayList<ImageProperties> data = new ArrayList<ImageProperties>(); // imageItems
     private int layoutResourceId; // R.layout.grid_item_layout
 
+    public void addItem(ImageProperties ip) {
+        if (ip != null) {
+            data.add(ip);
+            notifyDataSetChanged();
+        }
+    }
+
     // new CustomAdapter(this, R.layout.grid_item_layout, imageItems);
     public CustomAdapter(Context context, int layoutResourceId, ArrayList<ImageProperties> data) {
         this.layoutResourceId = layoutResourceId;

@@ -28,6 +28,7 @@
         android:layout_marginBottom="16dp"
         android:layout_marginRight="16dp"
         android:clickable="true"
+        android:onClick="takePhoto"
         android:src="@drawable/ic_featured_video_black_18dp"
         app:borderWidth="0dp"
         app:fabSize="normal"
