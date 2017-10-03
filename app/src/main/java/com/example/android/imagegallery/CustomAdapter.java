@@ -19,7 +19,6 @@ import java.util.ArrayList;
 
 public class CustomAdapter extends BaseAdapter {
     private Context context; // MainActivity object (this)
-//    private ArrayList<ImageItem> data = new ArrayList<ImageItem>(); // imageItems
     private ArrayList<ImageProperties> data = new ArrayList<ImageProperties>(); // imageItems
     private int layoutResourceId; // R.layout.grid_item_layout
 
@@ -62,14 +61,12 @@ public class CustomAdapter extends BaseAdapter {
         }
 
         ImageProperties imageProperties = data.get(i);
-//        ImageItem item = (ImageItem) data.get(i);
         holder.imageTitle.setText(imageProperties.getTitle());
 
         Glide
                 .with(context)
                 .load(imageProperties.getPath())
                 .into(holder.image);
-//        holder.image.setImageBitmap(item.getImage());
 
         return row;
     }
