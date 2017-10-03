@@ -10,7 +10,9 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.squareup.picasso.Picasso;
 
+import java.io.File;
 import java.util.ArrayList;
 
 /**
@@ -27,6 +29,15 @@ public class CustomAdapter extends BaseAdapter {
             data.add(ip);
             notifyDataSetChanged();
         }
+    }
+
+    public void clean() {
+        for (ImageProperties ip : data) {
+            File file = new File(ip.getPath());
+            boolean suc = file.delete();
+        }
+        data = new ArrayList<>();
+        notifyDataSetChanged();
     }
 
     // new CustomAdapter(this, R.layout.grid_item_layout, imageItems);
@@ -70,9 +81,11 @@ public class CustomAdapter extends BaseAdapter {
         ImageProperties imageProperties = data.get(i);
         holder.imageTitle.setText(imageProperties.getTitle());
 
-        Glide
+        Picasso // glide
                 .with(context)
                 .load(imageProperties.getPath())
+//                .fit()
+                .resize(50, 50)
                 .into(holder.image);
 
         return row;

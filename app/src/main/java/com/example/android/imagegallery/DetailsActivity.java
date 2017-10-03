@@ -8,6 +8,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.squareup.picasso.Picasso;
 
 /**
  * Created by fbrsw on 02.10.2017.
@@ -27,7 +28,7 @@ public class DetailsActivity extends AppCompatActivity {
         titleTextView.setText(title);
 
         ImageView imageView = (ImageView) findViewById(R.id.image);
-        Glide
+        Picasso // glide
                 .with(this)
                 .load(path)
                 .into(imageView);

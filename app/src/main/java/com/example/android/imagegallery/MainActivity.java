@@ -2,8 +2,11 @@ package com.example.android.imagegallery;
 
 import android.app.Activity;
 import android.content.ContentResolver;
+import android.content.ContentValues;
 import android.content.Intent;
 import android.content.res.TypedArray;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
@@ -32,12 +35,19 @@ public class MainActivity extends AppCompatActivity {
     private GridView gridView;
     private CustomAdapter gridAdapter;
 
+    DataBaseHandler dbHandler;
+    SQLiteDatabase db;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        ArrayList<ImageProperties> imageProp = loadImageProperties();
+        dbHandler = new DataBaseHandler(this);
+        db = dbHandler.getWritableDatabase();
+
+//        ArrayList<ImageProperties> imageProp = loadImageProperties();
+        ArrayList<ImageProperties> imageProp = synWithDB();
 
         gridView = (GridView) findViewById(R.id.gridView);
         gridAdapter = new CustomAdapter(this, R.layout.grid_item_layout, imageProp);
@@ -60,7 +70,12 @@ public class MainActivity extends AppCompatActivity {
                         String absolute = myFile.getAbsolutePath();
                         long size = myFile.length();
                         gridAdapter.addItem(new ImageProperties(absolute, name, size));
-                        Toast.makeText(this, "Photo added" + absolute, Toast.LENGTH_SHORT).show();
+
+                        ContentValues cv = new ContentValues();
+                        db = dbHandler.getWritableDatabase();
+                        cv.put("path", absolute);
+                        long rowID = db.insert("photos", null, cv);
+                        Toast.makeText(this, "Photo added " + rowID +" " + absolute, Toast.LENGTH_SHORT).show();
                     }
                 }
         }
@@ -69,7 +84,7 @@ public class MainActivity extends AppCompatActivity {
     public void takePhoto(View view) {
         Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
         //String.valueOf(System.currentTimeMillis()) + ".jpg"
-        String name = "Pic_" + gridAdapter.getCount() + ".jpg";
+        String name = "Pict_" + (gridAdapter.getCount() + 1) + ".jpg";
         File photo = new File(Environment.getExternalStorageDirectory(), "ImageGallery/" + name);
         intent.putExtra(MediaStore.EXTRA_OUTPUT,
                 Uri.fromFile(photo));
@@ -96,20 +111,38 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
-    private ArrayList<ImageProperties> loadImageProperties() {
+    private ArrayList<ImageProperties> synWithDB() {
         final ArrayList<ImageProperties> imageProperties = new ArrayList<>();
-        File path = new File(Environment.getExternalStorageDirectory(), "ImageGallery");
-        if (path.exists()) {
-            String[] fileNames = path.list();
-            for (int i = 0; i < fileNames.length; i++) {
-                String fullPath = path.getPath() + "/" + fileNames[i];
-                String fileName = fileNames[i];
-                if (fileName.length() > 11)
-                    fileName = fileName.substring(0, 11);
-                long size = new File(fullPath).length();
-                imageProperties.add(new ImageProperties(fullPath, fileName, size));
-            }
+
+        Cursor c = db.query("photos", null, null, null, null, null, null);
+        if (c.getCount() == 0) {
+            Toast.makeText(this, "Empty DB", Toast.LENGTH_LONG).show();
+        } else if (c.moveToFirst()) {
+            int idColIndex = c.getColumnIndex("id");
+            int pathColIndex = c.getColumnIndex("path");
+            do {
+                String path = c.getString(pathColIndex);
+                String res = "ID = " + c.getInt(idColIndex) +
+                        ", name = " + c.getString(pathColIndex);
+                File file = new File(path);
+                long size = file.length();
+                imageProperties.add(new ImageProperties(path, file.getName(), size));
+                Toast.makeText(this, res + "\n" + path, Toast.LENGTH_LONG).show();
+            } while (c.moveToNext());
         }
+        c.close();
+//        dbHandler.close();
         return imageProperties;
+    }
+
+    public void clean(View view) {
+//        SQLiteDatabase db = dbHandler.getWritableDatabase();
+
+        int clearCount = db.delete("photos", null, null);
+        Toast.makeText(this, "removed " + clearCount, Toast.LENGTH_LONG).show();
+
+//        gridAdapter.clean();
+//        dbHandler.close();
+        this.deleteDatabase("galleryPhotos");
     }
 }
