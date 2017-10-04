@@ -35,4 +35,24 @@ public class DataBaseHandler extends SQLiteOpenHelper {
     public void onUpgrade(SQLiteDatabase sqLiteDatabase, int i, int i1) {
 
     }
+
+    public int getDatabaseVersion() {
+        return DATABASE_VERSION;
+    }
+
+    public String getDatabaseName() {
+        return DATABASE_NAME;
+    }
+
+    public String getTablePhotosName() {
+        return TABLE_PHOTOS;
+    }
+
+    public String getKeyId() {
+        return KEY_ID;
+    }
+
+    public String getKeyPath() {
+        return KEY_PATH;
+    }
 }

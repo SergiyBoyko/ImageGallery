@@ -20,7 +20,7 @@
         android:layout_margin="10dp"
         android:background="#AA000000"
         android:padding="10dp"
-        android:text="1000KB"
+        android:text="0KB"
         android:textColor="#ffffffff" />
 
     <TextView
@@ -30,7 +30,7 @@
         android:layout_gravity="center_horizontal|bottom"
         android:layout_marginBottom="20dp"
         android:background="#AA000000"
-        android:padding="12dp"
+        android:padding="5dp"
         android:text="text"
         android:textColor="#ffffffff"
         android:textSize="20dp" />

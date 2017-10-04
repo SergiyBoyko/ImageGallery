@@ -10,11 +10,14 @@
         android:layout_width="match_parent"
         android:layout_height="30dp"
         android:onClick="clean"
-        android:layout_margin="5dp"
+        android:longClickable="true"
         android:background="@drawable/c_button"
         android:textColor="@android:color/white"
         android:text="Delete All"
-        android:textSize="10sp" />
+        android:textSize="10sp"
+        android:layout_alignParentTop="true"
+        android:layout_alignLeft="@+id/gridView"
+        android:layout_alignStart="@+id/gridView" />
 
     <GridView
         android:id="@+id/gridView"
@@ -22,8 +25,9 @@
         android:layout_height="wrap_content"
         android:layout_below="@id/cleaner_button"
         android:layout_margin="5dp"
+        android:longClickable="true"
         android:clickable="true"
-        android:columnWidth="165dp"
+        android:columnWidth="175dp"
         android:drawSelectorOnTop="true"
         android:focusable="true"
         android:gravity="center"
@@ -45,5 +49,5 @@
         android:src="@drawable/ic_featured_video_black_18dp"
         app:borderWidth="0dp"
         app:fabSize="normal"
-        app:pressedTranslationZ="12dp" />
+        app:pressedTranslationZ="22dp" />
 </RelativeLayout>

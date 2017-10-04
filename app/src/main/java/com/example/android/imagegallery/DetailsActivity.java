@@ -1,6 +1,7 @@
 package com.example.android.imagegallery;
 
 import android.graphics.Bitmap;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.app.AppCompatActivity;
@@ -9,6 +10,8 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.squareup.picasso.Picasso;
+
+import java.io.File;
 
 /**
  * Created by fbrsw on 02.10.2017.
@@ -28,9 +31,12 @@ public class DetailsActivity extends AppCompatActivity {
         titleTextView.setText(title);
 
         ImageView imageView = (ImageView) findViewById(R.id.image);
+
+        Uri uri = Uri.fromFile(new File(path));
+
         Picasso // glide
                 .with(this)
-                .load(path)
+                .load(uri)
                 .into(imageView);
 
         String len = String.valueOf(length / (1024)) + "KB";

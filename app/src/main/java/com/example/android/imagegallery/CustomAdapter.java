@@ -2,6 +2,7 @@ package com.example.android.imagegallery;
 
 import android.app.Activity;
 import android.content.Context;
+import android.net.Uri;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -38,6 +39,17 @@ public class CustomAdapter extends BaseAdapter {
         }
         data = new ArrayList<>();
         notifyDataSetChanged();
+    }
+
+    public boolean removeOne(ImageProperties ip) {
+        boolean suc = false;
+        if (data.contains(ip)) {
+            File file = new File(ip.getPath());
+            data.remove(ip);
+            suc = file.delete();
+        }
+        notifyDataSetChanged();
+        return suc;
     }
 
     // new CustomAdapter(this, R.layout.grid_item_layout, imageItems);
@@ -81,11 +93,13 @@ public class CustomAdapter extends BaseAdapter {
         ImageProperties imageProperties = data.get(i);
         holder.imageTitle.setText(imageProperties.getTitle());
 
+        Uri uri = Uri.fromFile(new File(imageProperties.getPath()));
+
         Picasso // glide
                 .with(context)
-                .load(imageProperties.getPath())
-//                .fit()
-                .resize(50, 50)
+                .load(uri)
+                .resize(96, 96)
+                .centerCrop()
                 .into(holder.image);
 
         return row;
